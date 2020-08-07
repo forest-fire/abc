@@ -2,7 +2,7 @@
 
 ## Install Deps
 
-In order to use the ABC API you must have **Firemodel** and **Universal-Fire** installed, to install ABC as well as these deps you will:
+In order to use the ABC API you must have **Firemodel** and **universal-fire** installed, to install ABC as well as these deps you will:
 
 ```sh
 # npm
@@ -45,20 +45,22 @@ export const dispatcher = store.dispatch
 The Vuex dispatch has an identical signature to ABC so nothing more is needed. Just move onto the configuration section to see how to proceed from there.
 
 ### Vegemite
-In Vegemite the *dispatcher* is the  
+Vegemite is a more compact/efficient store as it doesn't add a lot of the getter/setter magic of Vuex/Vue2's reactivity system. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 
-## Configure ABC for the Model
+## Configure ABC for a Model
 
-The most basic means of configuring ABC is just passing in the dispatcher:
+The simplist configuration of ABC is just the `Model` and _dispatcher_ but you can also pass it along with other options configured:
 
 ```ts
-import { Product } from '../models';
-// obviously change your source here to whatever makes sense
-// to your situation
-import { dispatcher } from 'dipatcher';
+import { Product, UserProfile } from '../models';
+import { dispatcher } from '@/store';
 
-const [ getProducts, watchProducts, loadProducts, syncProducts ] = abc(Product, dispatcher);
+// basic config
+const [ getProducts, watchProducts, loadProducts, syncProducts ] 
+  = abc(Product, dispatcher);
+
+// openning up other config options
+const [ getUsers, watchUsers, loadUsers, syncUsers ] 
+  = abc(UserProfile, dispatcher);
 ```
-
-This default configuration
