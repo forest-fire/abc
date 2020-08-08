@@ -2,18 +2,18 @@
 home: true
 heroTitle: ABC API
 heroImage: /images/abc.png
-tagline: A cache-forward API to leverage Firemodel/Firebase in the browser
+tagline: A cache-forward API to leverage state mgmt frameworks and IndexedDB in the browser with Firebase backed data
 actionText: Get Started →
 actionLink: /getting-started/
 
 features:
 - title: Firemodel Integration
-  details: Easily connect your Firemodel model's to Vuex to ensure that state stays in sync between Firebase and Vuex while also gaining full access to Firemodel's powerful mocking capabilities
+  details: Easily connect your Firemodel model's to provide seemly integration between your frontend state management framework, IndexedDb, and Firebase
   link: /wrapper
-- title: Authentication
-  details: Plug into Firebase's authentication services with ease and hook into useful auth lifecycle events to help manage your state
-- title: Multi-Level Caching
-  details: Provides a compact API that supports the idea of ABC (always be caching); this strategy leverages reactivity in the browser, IndexedDB, and Firebase to achieve a high performance workflow
+- title: Simple
+  details: Allow use of a simple and transparent API to do complex caching for you.
+- title: Powerful
+  details: Dipping below the surface, you can choose from a variety of caching strategies and database options that give you an almost unlimited set of usage patterns.
 
 footer: MIT Licensed | Copyright © Inocan Group
 ---

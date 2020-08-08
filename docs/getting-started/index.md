@@ -1,8 +1,11 @@
+---
+sidebar: auto
+---
 # Getting Started
 
 ## Install Deps
 
-In order to use the ABC API you must have **Firemodel** and **universal-fire** installed, to install ABC as well as these deps you will:
+In order to use the ABC API you must have [**Firemodel**](https://firemodel.info) and [**universal-fire**](https://universal-fire.net) installed:
 
 ```sh
 # npm
@@ -11,9 +14,73 @@ npm install firemodel universal-fire abc --save
 yarn add firemodel universal-fire abc
 ```
 
-## Create a Model
+## Creating a Store(s)
 
-ABC works with Firemodel Model's so before using it we'll need to create a model:
+
+
+## Dispatching
+**ABC** responds to data changes by packaging it up as an "event" and _dispatching_ it. Dispatching is the bridge used to move the change to the state management tool of your choice. In order to add your favorite state management tool you just need to respond to the events provided by ABC and then mutate the state in the way your tool proscribes.
+
+All frameworks require a very simple "plugin" to provide dispatcher functionality which really is no more than a function which conforms to the `AbcDispatchPlugin` type defined below:
+
+```typescript
+export type AbcDispatchPlugin = () => {  
+  dispatcher: AbcDispatchFunction,
+  handlers: AbcHandlerLibrary
+}
+
+export type AbcDispatchFunction = <T>(event: string, payload: T) => Promise<void>
+```
+
+<!-- TODO: bring in type definition for AbcHandlerLibrary, or more likely link out to it -->
+
+### Included Plugins
+
+We include two plugins that are officially maintained and if you've developed one for another framework let us know and we'll link to it. Offical plugins are:
+
+1. [Vuex](https://vuex.vuejs.org/)
+2. [Vegemite](https://github.com/lukeed/vegemite)
+
+> both plugins can be found on Github under the **forest-fire** organization: [vuex plugin](https://github.com/forest-fire/abc-dispatch-vuex), [vegemite plugin](https://github.com/forest-fire/abc-dispatch-vegemite) and should as good instruction for anyone wanting to create their own
+
+## The Store
+
+The "store" is the in-memory data structure that the frontend framework will leverage to *reactively* update pages in the DOM. Structurally they start out as a generic dictionary but then must be _shaped_ into a form that is useful for the application. The specifics of each framework are not important to ABC but there are three broad-based formats that ABC supports:
+
+1. Single Store, Namespaced
+
+    Frameworks such as **Vuex**, assume a single data structure for the store. However, they do provide the concept of a "module" so that different parts of the tree (aka, modules) can be namespaced and avoid
+    any collisions with one another in terms of mutations/reducers/etc.
+
+2. Store per Model
+
+    Frameworks like **Vegemite** can be setup as a single store but are often better structured on a "store per model" basis. This provides the namespace isoloation that modules provide along with other flexibility that can sometimes be important.  
+
+ABC's only requirement about the store is that you 
+<!-- TODO: finish this off -->
+
+## Configuring ABC
+
+Configuration of ABC is done on a model-by-model basis and would look something like this if you were using the Vegemite plugin:
+
+```ts
+import { Product } from '../models';
+import dispatcher from '@forest-fire/abc-dispatch-vegemite';
+
+// basic config
+export const [ getProducts, watchProducts, loadProducts, syncProducts ] 
+  = abc(Product, dispatcher);
+```
+
+There are more advanced configurations which you can try later -- described in [Configuring ABC]() section) -- but at this point you have the ABC functions you'll need to interact with your `Product` model.
+
+## Example: Vegemite
+
+To illustrate we'll use a simple example where we have only one model `Product` and we've decided to use the **Vegemite** state manager in a "one store to model" configuration. 
+
+### Create the `Product` Model
+
+ABC works with [Firemodel](https://firemodel.info) Model's so before doing anything let's define the model so it can be used in all state layers (e.g., Firebase, IndexedDb, and Vegemite):
 
 ```typescript
 @model()
@@ -27,40 +94,50 @@ export class Product extends Model {
 
 > **Note:** this is a very simple model with no relationships, mocks, or other advanced featues. Check the Firemodel docs for more info on this topic: [Modeling in Firemodel](https://firemodel.info/modeling/)
 
-## Choose a Dispatcher
-When ABC gets updates to data it _dispatches_ them to the appropriate state-management tool. Currently the state management tools supported are [Vuex](https://vuex.vuejs.org/) and [Vegemite](https://github.com/lukeed/vegemite).
+### Store Setup
+In our example we're using the `isolation` store type which takes just a single model as the basis for it's state management. A few defaults and opinions that are worth mentioning:
 
-### Vuex
-To use Vuex as the store solution, we simply need to pick up the dispatcher function from 
+- All models being managed are assumed to be 
 
-We can use Vuex's dispatcher to send our data events into Vuex's store with the following:
+This is where 99% of your configuration will go and in this simple example 100%:
 
+`/src/store.ts`
 ```typescript
-// once you have a reference to the Vuex store
-export const store = new Vuex.Store({ ... })
-// the store provides a dispatcher to send actions to
-export const dispatcher = store.dispatch
+import {createStore, moduleDefn} from 'abc';
+import vegemite from '@forest-fire/abc-plugin-vegemite';
+import { FirestoreClient } from 'universal-fire';
+
+interface IProductStore {
+  all: Product[];
+  featured: string[];
+}
+
+const db = await FirestoreClient.connect();
+export const store = createStore(
+  db, vegemite, 'isolated',
+  moduleDefn<IProductStore>(Product, { all: [], featured: [] })
+});
+
+export [
+  getProducts, 
+  watchProducts, 
+  loadProducts, 
+  syncProducts
+] = store.abc(Product);
+
+export const store = vegemite<IEventMap, IProductStore>({
+  all: [],
+  featured: [],
+});
 ```
 
-The Vuex dispatch has an identical signature to ABC so nothing more is needed. Just move onto the configuration section to see how to proceed from there.
-
-### Vegemite
-Vegemite is a more compact/efficient store as it doesn't add a lot of the getter/setter magic of Vuex/Vue2's reactivity system. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 
-## Configure ABC for a Model
+Imagine when we login the following lifecycle hook is called:
 
-The simplist configuration of ABC is just the `Model` and _dispatcher_ but you can also pass it along with other options configured:
-
-```ts
-import { Product, UserProfile } from '../models';
-import { dispatcher } from '@/store';
-
-// basic config
-const [ getProducts, watchProducts, loadProducts, syncProducts ] 
-  = abc(Product, dispatcher);
-
-// openning up other config options
-const [ getUsers, watchUsers, loadUsers, syncUsers ] 
-  = abc(UserProfile, dispatcher);
+```typescript
+async function onLogin() {
+  import { syncProducts, dispatch } from "@/store";
+  syncProducts(where('inStock', true)).then(() => dispatch('products::in-sync')) 
+}
 ```

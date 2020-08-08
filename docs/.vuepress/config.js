@@ -156,11 +156,10 @@ module.exports = {
     ],
   ],
   themeConfig: {
-    repo: 'forest-fire/vuex-plugin-firemodel',
+    repo: 'forest-fire/abc',
     repoLabel: 'github',
     docsDir: 'docs',
     smoothScroll: true,
-    editLinks: true,
     nextLinks: true,
     nav: [
       {
@@ -168,31 +167,41 @@ module.exports = {
         link: '/getting-started/',
       },
       {
-        text: 'GET',
-        link: '/firemodel/',
+        text: 'Examples',
+        link: '/examples/',
       },
       {
-        text: 'WATCH',
-        link: '/abc-api/',
+        text: 'CRUD',
+        link: '/crud/',
       },
       {
-        text: 'LOAD',
-        link: '/lifecycle/',
+        text: 'Sync',
+        link: '/sync/',
       },
 
       {
-        text: 'SYNC',
-        link: '/mocking/',
-      },
-      {
-        text: 'Writing',
-        link: '/write-operations/',
-      },
-      {
-        text: 'Firemodel and Firebase',
-        link: 'firemodel-and-firebase',
+        text: '... More',
+        link: '/more/',
       },
     ],
-    sidebar: 'auto',
+    sidebar: {
+      '/examples/': [
+        {
+          title: 'Vegemite',
+          collapsable: true,
+          children: ['vegemite-isolated', 'vegemite-modules'],
+        },
+        {
+          title: 'Vuex',
+          collapsable: true,
+          children: ['vuex-modules'],
+        },
+        {
+          title: 'Advanced',
+          collapsable: true,
+          childen: ['adding-custom-events'],
+        },
+      ],
+    },
   },
 };

@@ -16,7 +16,8 @@
     "outDir": "dist",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["test"]
+  "include": ["test/**/*.ts"]
 }
