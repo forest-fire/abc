@@ -13,29 +13,23 @@ interface IEventMap {
   remove: string;
 }
 
-const events = {
-  add: (state: IProductStore, product: Product) => {
-    state.all.push(product);
-  },
-  remove: (state: IProductStore, productId: string) => {
-    state.all = state.all.filter(i => i.id !== productId);
-  },
-};
-
-Object.keys(events).forEach((evt: keyof typeof events) => {
-  store.on(evt, events[evt]);
-});
-
 const store = vegemite<IEventMap, IProductStore>({
   all: [],
   featured: [],
 });
 
+store.on('add', (state: IProductStore, product: Product) => {
+  state.all.push(product);
+});
+store.on('remove', (state: IProductStore, productId: string) => {
+  state.all = state.all.filter(i => i.id !== productId);
+});
+
 test('Dispatch changes state with add/remove handlers', async () => {
-  const product = { id: '1234', name: 'jelly beans', price: 2, category: 'foo' };
+  const product: Product = { id: '1234', name: 'jelly beans', price: 2, category: 'foo', brand: '' };
   await store.dispatch('add', product);
   assert.equal(store.state.all.length, 1);
-  await store.dispatch('remove', product.id);
+  await store.dispatch('remove', product.id as string);
   assert.equal(store.state.all.length, 0);
 });
 

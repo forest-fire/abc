@@ -1,2 +1,0 @@
-# CRUD in ABC
-

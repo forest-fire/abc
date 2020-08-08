@@ -1,0 +1,4 @@
+# Load
+The `load` command is used to pull data from the Firebase database and inject it into local database (typically IndexedDB). This -- by default -- does not change the state of the local change management tool and therefore is a useful way to load in larger datasets to which only a subset are needed "in-memory" in the state management tool.
+
+The `load` command should be considered alongside the `sync` command as ways to "prime" the local database's cache validity. The distinction being that `load` handles one-time loads of data (aka, `Promise<data>`) whereas `sync` provides a watcher/listener on the Firebase database which will stream a series of data updates as events are discovered.

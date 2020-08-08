@@ -3,6 +3,7 @@ module.exports = {
     // lineNumbers: true
   },
   plugins: {
+    mermaidjs: true,
     '@vuepress/pwa': {
       serviceWorker: true,
       updatePopup: {
@@ -11,7 +12,6 @@ module.exports = {
       },
     },
     '@vuepress/back-to-top': true,
-    '@vuepress/last-updated': true,
     '@vuepress/medium-zoom': {
       selector: 'img',
     },
@@ -34,7 +34,7 @@ module.exports = {
     ],
   },
   title: 'ABC API',
-  description: 'An API that gives you low-cruft, cache-forward data with very little effort',
+  description: 'A cache forward API which brings together local state management, IndexedDB, and Firebase',
   head: [
     ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
     ['meta', { name: 'application-name', content: 'FireModel Vuex Plugin' }],
@@ -167,21 +167,16 @@ module.exports = {
         link: '/getting-started/',
       },
       {
+        text: 'API',
+        link: '/api/',
+      },
+      {
+        text: 'Other Topics',
+        link: '/topics/',
+      },
+      {
         text: 'Examples',
         link: '/examples/',
-      },
-      {
-        text: 'CRUD',
-        link: '/crud/',
-      },
-      {
-        text: 'Sync',
-        link: '/sync/',
-      },
-
-      {
-        text: '... More',
-        link: '/more/',
       },
     ],
     sidebar: {
@@ -200,6 +195,31 @@ module.exports = {
           title: 'Advanced',
           collapsable: true,
           childen: ['adding-custom-events'],
+        },
+      ],
+      '/api/': [
+        '/api/',
+        {
+          title: 'Core API',
+          collapsable: true,
+          children: ['get', 'load', 'add', 'update', 'remove', 'purge', 'sync'],
+        },
+        {
+          title: 'Store API',
+          collapsable: true,
+          children: ['createStore'],
+        },
+        {
+          title: 'Connect API',
+          collapsable: true,
+          children: ['createStore'],
+        },
+      ],
+      '/topics/': [
+        {
+          title: 'Topics',
+          collapsable: false,
+          children: ['app-returns-versus-state', 'state-mgmt-conventions', 'what-is-a-store'],
         },
       ],
     },
