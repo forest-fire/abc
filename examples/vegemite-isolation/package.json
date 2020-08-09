@@ -1,0 +1,39 @@
+{
+  "name": "vegemite-isolation",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit",
+    "test:e2e": "vue-cli-service test:e2e",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@firebase/app": "^0.6.9",
+    "@firebase/database": "^0.6.10",
+    "common-types": "^1.15.8",
+    "core-js": "^3.6.5",
+    "vue": "^3.0.0-rc.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.19",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "@vue/cli-plugin-babel": "~4.5.1",
+    "@vue/cli-plugin-e2e-cypress": "~4.5.1",
+    "@vue/cli-plugin-eslint": "~4.5.1",
+    "@vue/cli-plugin-typescript": "~4.5.1",
+    "@vue/cli-plugin-unit-jest": "~4.5.1",
+    "@vue/cli-service": "~4.5.1",
+    "@vue/compiler-sfc": "^3.0.0-rc.5",
+    "@vue/eslint-config-typescript": "^5.0.2",
+    "@vue/test-utils": "^2.0.0-beta.2",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^7.0.0-beta.2",
+    "firemodel": "^0.55.12",
+    "typescript": "~3.9.3",
+    "universal-fire": "^0.55.13",
+    "vue-cli-plugin-vue-next": "~0.1.3"
+  }
+}

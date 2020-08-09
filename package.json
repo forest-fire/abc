@@ -48,5 +48,6 @@
     "vegemite": "^1.0.0",
     "vuepress": "^1.5.3",
     "vuepress-plugin-mermaidjs": "^1.6.0"
-  }
+  },
+  "dependencies": {}
 }
