@@ -7,17 +7,15 @@
     "include": ["tests/**/*"]
   },
   "compilerOptions": {
-    "module": "esnext",
+    "module": "commonjs",
     "target": "esnext",
-    "lib": ["es2015.reflect", "DOM", "ES2017"],
     "moduleResolution": "node",
     "strict": true,
     "noEmit": true,
-    "outDir": "dist",
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["test/**/*.ts"]
+  "include": ["src", "tests"]
 }

@@ -9,11 +9,20 @@ import { IUnderlyingError } from 'firemodel';
  */
 export const enum AbcLocalEvent {
   /**
+   * Add a newly created record to local state. If this record already exists the
+   * handler will throw an error extension of **AbcError** with a `code` of 'invalid-record'
+   *
+   * This is typically actuated by a local action (aka, not yet confirmed to reside
+   * in a database yet) because it is most commonly the App which knows what is a "new"
+   * record but another use-case for this is
+   */
+  add = 'add',
+  /**
    * All records of a given model are removed and replaced with what is passed in
    * the payload.
    *
-   * > **Note:** for model's with dynamic paths, only those records on the same
-   * dynamic path are affected; others will be left untouched.
+   * > **Note:** _for model's with dynamic paths, only those records on the same
+   * dynamic path are affected; others will be left untouched._
    */
   set = 'set',
   /**
@@ -23,8 +32,8 @@ export const enum AbcLocalEvent {
    * the same records in the local store
    * - records which already existed in the store are retained
    *
-   * > **Note:** for model's with dynamic paths, only those records on the same
-   * dynamic path are affected; others will be left untouched.
+   * > **Note:** _for model's with dynamic paths, only those records on the same
+   * dynamic path are affected; others will be left untouched._
    */
   merge = 'merge',
   /**
@@ -47,8 +56,8 @@ export const enum AbcLocalEvent {
   /**
    * Clear all records of a particular model from the store.
    *
-   * > Note: this operation clears all records regardless of whether the
-   * given model has a dynamic path or not
+   * > **Note:** _this operation clears all records regardless of whether the
+   * given model has a dynamic path or not_
    */
   purge = 'purge',
 }
@@ -58,16 +67,15 @@ export const enum AbcLocalEvent {
  * which are purely informational about activities taken on the IndexedDB
  * (or any other DB serving as the local caching database).
  *
- * These events do not mutate state so depending on the framework they can
- * either be ignored or handled (to avoid error messages about "unknown xxx", etc).
- *
- * Their value is actually quite high, however, debugging and development to
- * better understand about how state changes have serialized over time.
+ * These events do not mutate state so depending on the framework they do
+ * not need to be handled by the local state management framework (assuming
+ * no error is generated as an outcome).
  */
 export const enum AbcLocalDbEvent {
   /** set a single record in the local database */
   setLocalRecord = 'setLocalRecord',
   updatedLocalRecord = 'updatedLocalRecord',
+  removedLocalRecord = 'removedLocalRecord',
   /**
    * records any local database error; in addition to the error message
    * it provides context about the db operation as well as if the code
@@ -75,3 +83,14 @@ export const enum AbcLocalDbEvent {
    */
   localDbError = 'localDbError',
 }
+
+/**
+ * There are data events fired into the local state management's handlers
+ * which are purely informational about activities taken on the Firebase
+ * database.
+ *
+ * These events do not mutate state so depending on the framework they do
+ * not need to be handled by the local state management framework (assuming
+ * no error is generated as an outcome).
+ */
+export const enum AbcFirebaseEvent {}

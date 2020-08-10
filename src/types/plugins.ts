@@ -7,4 +7,3 @@ export const enum AbcPluginType {
 
 export type AbcStorePluginInterface = <T extends StorePlugin<T>>() => StorePlugin<T>;
 
-export type Abc
