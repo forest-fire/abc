@@ -1,6 +1,6 @@
 import { IAbstractedDatabase } from 'universal-fire';
 import { Model } from 'firemodel';
-import { IAbcEvent, IAbcEventPayload } from './index';
+import { IAbcEventPayload } from './index';
 
 export const enum LocalDatabase {
   /**
@@ -17,26 +17,14 @@ export interface IAbcApiConfig<T extends Model> {
    * When ABC receives data from either **Firebase** or **IndexedDB**
    * it will
    */
-  dispatcher: (event: IAbcEvent, data: IAbcEventPayload<T>) => void;
+  dispatcher: (event: string, data: IAbcEventPayload<T>) => void;
 
   /**
-   * Indicates whether the Vuex store is storing a _list_
-   * of this type of `Model` or just a single _record_.
-   *
-   * If this property is not stated than it will be assumed
-   * to be `true`.
+   * By default models are assumed to be a _list_ of records but if
+   * configured to be "singular" then only one record will be stored
+   * in the local store.
    */
-  isList?: boolean;
-  /**
-   * Indicates whether ABC should cache this `Model`
-   * in **IndexedDB** or not. Default is set to **true**.
-   *
-   * **Note:** there's very little reason to use the ABC API if you
-   * _aren't_ going to use the IndexedDB but there may be cases
-   * where a particular model is not desirable to be in IndexedDB
-   * but you want to preserve the same API surface for it.
-   */
-  useIndexedDb?: boolean;
+  singular?: boolean;
 
   /**
    * Currently the only local database is Indexed DB but eventually
@@ -55,9 +43,8 @@ export interface IAbcApiConfig<T extends Model> {
    * **Firemodel** typically determines the local path for you -- based
    * on the plural name of the model -- but if you need to you can override
    * this path with whatever you like.
-   *
-   * **Note:** this path will be used not only in the **ABC** API but also when
-   * responding to Firemodel mutations as well.
    */
   moduleName?: string;
+  // TODO: standardize the naming convention ... right now we're using moduleName
+  // and localOffset
 }

@@ -1,10 +1,12 @@
 import { IDictionary } from 'common-types';
-import { ConstructorFor } from '../types/general';
-import { AbcPluginType } from './types';
+import { AbcLocalEventMap, AbcPluginType } from '../types';
 
-export abstract class StorePlugin<TState extends IDictionary> {
-  readonly kind: AbcPluginType.store;
-  /** a reference to the state tree that is being managed */
-  abstract get state(): TState;
-  abstract get handlers(): 
+export class StorePlugin<TState extends IDictionary, THandlers extends AbcLocalEventMap> {
+  readonly kind = AbcPluginType.store;
+  /** the plugin's name */
+  readonly name: string;
+
+  constructor(name: string, handlers: THandlers) {
+    this.name = name;
+  }
 }

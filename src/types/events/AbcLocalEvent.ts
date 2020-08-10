@@ -1,5 +1,3 @@
-import { IUnderlyingError } from 'firemodel';
-
 /**
  * The data events coming from ABC which require state management
  * handlers to mutate the local state.
@@ -60,37 +58,12 @@ export const enum AbcLocalEvent {
    * given model has a dynamic path or not_
    */
   purge = 'purge',
-}
-
-/**
- * There are data events fired into the local state management's handlers
- * which are purely informational about activities taken on the IndexedDB
- * (or any other DB serving as the local caching database).
- *
- * These events do not mutate state so depending on the framework they do
- * not need to be handled by the local state management framework (assuming
- * no error is generated as an outcome).
- */
-export const enum AbcLocalDbEvent {
-  /** set a single record in the local database */
-  setLocalRecord = 'setLocalRecord',
-  updatedLocalRecord = 'updatedLocalRecord',
-  removedLocalRecord = 'removedLocalRecord',
   /**
-   * records any local database error; in addition to the error message
-   * it provides context about the db operation as well as if the code
-   * _handled_ the error or not.
+   * Associates two records together
    */
-  localDbError = 'localDbError',
+  associate = 'associate',
+  /**
+   * Disassociates two records
+   */
+  disassociate = 'disassociate',
 }
-
-/**
- * There are data events fired into the local state management's handlers
- * which are purely informational about activities taken on the Firebase
- * database.
- *
- * These events do not mutate state so depending on the framework they do
- * not need to be handled by the local state management framework (assuming
- * no error is generated as an outcome).
- */
-export const enum AbcFirebaseEvent {}
