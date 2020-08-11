@@ -45,6 +45,4 @@ export interface IAbcApiConfig<T extends Model> {
    * this path with whatever you like.
    */
   moduleName?: string;
-  // TODO: standardize the naming convention ... right now we're using moduleName
-  // and localOffset
 }

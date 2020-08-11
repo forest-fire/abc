@@ -1,6 +1,5 @@
 //#autoindex, exclude: store,subscribers
 
-export { subscribe, unsubscribe } from './subscribers';
 export { createStore } from './store';
 
 //#region autoindexed files
@@ -10,8 +9,8 @@ export { createStore } from './store';
 // directories: abc, errors, types.
 
 // directory exports
-export * from "./abc/index";
-export * from "./errors/index";
-export * from "./types/index";
+export * from './abc/index';
+export * from './errors/index';
+export * from './types/index';
 
 //#endregion

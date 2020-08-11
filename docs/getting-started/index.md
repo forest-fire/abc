@@ -5,7 +5,7 @@ sidebar: auto
 
 ## Install Deps
 
-In order to use the ABC API you must have [**Firemodel**](https://firemodel.info), [**universal-fire**](https://universal-fire.net), and [**abc**] installed:
+In order to use the ABC API you must have [**Firemodel**](https://firemodel.info), [**universal-fire**](https://universal-fire.net), and **abc** installed:
 
 ```sh
 # npm
@@ -60,7 +60,7 @@ Currently there are two included as plugins which takes all the hard work out of
 - **Vuex** [ [framework](https://vuex.vuejs.org/), [plugin](https://github.com/forest-fire/abc-plugin-vuex) ]
 - **Vegemite** [ [framework](https://github.com/lukeed/vegemite), [plugin](https://github.com/forest-fire/abc-plugin-vegemite) ]. 
 
-Alternatively, if you want to connect a different manager you can roll your own (see [Creating a Store Plugins](/topics/store) in the _topics_ section).  
+Alternatively, if you want to connect a different manager you can roll your own (see [Creating a Store Plugin](/topics/store) in the _topics_ section).  
 
 Let's assume, for sake of argument, that we've decided on using the Vegemite solution. We must first install these deps:
 
@@ -130,9 +130,11 @@ export const store = createStore<IStoreState>(
 );
 ```
 
-What we can see from this example is that the third parameter to `createStore` is a *function* which provides us two functions to help us configure each of our state modules. If the state module is being backed by Firemodel then use the `model()` function, if not then use `module()`. These two functions have very similar signatures and the second parameter allows us to state what the default state should be.
+What we can see from this example is that the third parameter to `createStore` is a *function* which provides us two helper functions to assist in configuring our state modules. If the state module is being backed by Firemodel then use the `model()` function, if not then use `module()`. These two functions have very similar signatures and in both cases the second parameter allows us to state what the default state should be. This can be either a static statement or a synchronous function which will be resolved at load.
 
-You may have noticed that for `UserProfile` we used a third parameter. This is an _options hash_ which has several ABC options that you'll also see but also a plugin can add in additional configuration elements. In the next section you'll see why that's important.
+> The function syntax gives you some flexibility to react to your environment; a common pattern is to load in a cookie (as they load synchronously) to initialize state. Be warned, some people frown on this and you definitely should keep cookies size to a minimum.
+
+Also note in the above example that `UserProfile` used a third parameter. This is an _options hash_ which has several ABC config options but the Store plugin can can also add additional configuration options. In the next section you'll see why that's important.
 
 #### Custom Mutations
 

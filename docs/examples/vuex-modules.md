@@ -1,2 +1,0 @@
-# Vuex Modules Store
-

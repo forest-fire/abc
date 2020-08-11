@@ -1,7 +1,8 @@
 import { Model, IPrimaryKey } from "firemodel";
 import type {  ISerializedQuery, ISerializedIdentity } from "universal-fire";
 import { epochWithMilliseconds, IDictionary } from "common-types";
-import type { AbcApi, AbcResult } from "@/abc";
+import type { AbcApi, AbcResult } from "./index";
+import { IAbcApiConfig } from "../types";
 
 
 /**
@@ -110,8 +111,7 @@ export interface ICachePerformance {
 }
 
 /**
- * Payload type that is passed to vuex when a store commit is called
- * in ABC.
+ * DEPRECATED
  */
 export interface IAbcPayload<T> {
   records: T[];

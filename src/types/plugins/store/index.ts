@@ -2,12 +2,12 @@
 
 //#region autoindexed files
 
-// index last changed at: 8th Aug, 2020, 03:04 PM ( GMT-7 )
+// index last changed at: 8th Aug, 2020, 05:48 AM ( GMT-7 )
 // export: named; exclusions: index, private.
-// files: IStoreDefinition, other.
+// files: IStoreDefinition, storeConnect.
 
 // local file exports
 export * from "./IStoreDefinition";
-export * from "./other";
+export * from "./storeConnect";
 
 //#endregion

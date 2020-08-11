@@ -13,7 +13,7 @@
     "build": "run-s clear autoindex build:bundle",
     "build:bundle": "rollup -c",
     "test": "yarn uvu tests -r ts-node/register",
-    "autoindex": "yarn do autoindex & yarn do autoindex --dir test",
+    "autoindex": "yarn do autoindex & yarn do autoindex --dir tests",
     "docs": "yarn vuepress dev docs",
     "circular": "yarn madge src --ts-config tsconfig.json --extensions ts --circular",
     "orphans": "yarn madge src --ts-config tsconfig.json --extensions ts --orphans",

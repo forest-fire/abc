@@ -170,10 +170,10 @@ module.exports = {
         text: 'API',
         link: '/api/',
       },
-      {
-        text: 'Other Topics',
-        link: '/topics/',
-      },
+      // {
+      //   text: 'Other Topics',
+      //   link: '/topics/',
+      // },
       {
         text: 'Examples',
         link: '/examples/',
@@ -182,26 +182,16 @@ module.exports = {
     sidebar: {
       '/examples/': [
         {
-          title: 'Vegemite',
+          title: 'Examples',
           collapsable: true,
-          children: ['vegemite-isolated', 'vegemite-modules'],
-        },
-        {
-          title: 'Vuex',
-          collapsable: true,
-          children: ['vuex-modules'],
-        },
-        {
-          title: 'Advanced',
-          collapsable: true,
-          childen: ['adding-custom-events'],
+          childen: ['index', 'vegemite', 'vuex'],
         },
       ],
       '/api/': [
         '/api/',
         {
           title: 'Core API',
-          collapsable: true,
+          collapsable: false,
           children: ['get', 'load', 'add', 'update', 'remove', 'purge', 'sync'],
         },
         'store-connect',

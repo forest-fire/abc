@@ -1,4 +1,4 @@
-# Vegemite Modules Store
+# Vegemite backed Store
 
 ## Context 
 For a "modules" store backed by Vegemite we map as many models as we like into the store. Each model will be stored directly off the root of the store using the model's plural name (unless a module has been explicitly configured as `singular`).

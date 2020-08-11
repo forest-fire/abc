@@ -15,7 +15,7 @@ const generalConfig = moduleSystem => ({
     resolve(),
     typescript2({
       rootDir: '.',
-      tsconfig: `tsconfig.es.json`,
+      tsconfig: `tsconfig.bundle.json`,
       typescript: require('ttypescript'),
       declaration: moduleSystem === 'typings' ? true : false,
     }),
