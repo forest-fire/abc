@@ -14,7 +14,11 @@
     "build:bundle": "rollup -c",
     "test": "yarn uvu tests -r ts-node/register",
     "autoindex": "yarn do autoindex & yarn do autoindex --dir test",
-    "docs": "yarn vuepress dev docs"
+    "docs": "yarn vuepress dev docs",
+    "circular": "yarn madge src --ts-config tsconfig.json --extensions ts --circular",
+    "orphans": "yarn madge src --ts-config tsconfig.json --extensions ts --orphans",
+    "summary": "yarn madge src --ts-config tsconfig.json --extensions ts --summary",
+    "visualize": "yarn madge src --ts-config tsconfig.json --extensions ts -i /tmp/dep-visualize.png && open /tmp/dep-visualize.png"
   },
   "repository": {
     "type": "git",
@@ -47,6 +51,7 @@
     "@vuepress/plugin-pwa": "^1.5.3",
     "do-devops": "^0.4.8",
     "firemodel": "^0.55.12",
+    "madge": "^3.9.2",
     "native-dash": "^1.1.0",
     "npm-run-all": "^4.1.5",
     "rollup": "^2.23.1",

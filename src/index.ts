@@ -5,14 +5,13 @@ export { createStore } from './store';
 
 //#region autoindexed files
 
-// index last changed at: 8th Aug, 2020, 10:52 PM ( GMT-7 )
+// index last changed at: 8th Aug, 2020, 03:04 PM ( GMT-7 )
 // export: named; exclusions: store, subscribers, index, private.
-// directories: abc, errors, plugins, types.
+// directories: abc, errors, types.
 
 // directory exports
-export * from './abc/index';
-export * from './errors/index';
-export * from './plugins/index';
-export * from './types/index';
+export * from "./abc/index";
+export * from "./errors/index";
+export * from "./types/index";
 
 //#endregion

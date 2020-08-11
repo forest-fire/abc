@@ -204,22 +204,14 @@ module.exports = {
           collapsable: true,
           children: ['get', 'load', 'add', 'update', 'remove', 'purge', 'sync'],
         },
-        {
-          title: 'Store API',
-          collapsable: true,
-          children: ['createStore'],
-        },
-        {
-          title: 'Connect API',
-          collapsable: true,
-          children: ['createStore'],
-        },
+        'store-connect',
+        'db-connect',
       ],
       '/topics/': [
         {
           title: 'Topics',
           collapsable: false,
-          children: ['app-returns-versus-state', 'state-mgmt-conventions', 'what-is-a-store'],
+          children: ['app-returns-versus-state', 'state-mgmt-conventions', 'store', 'localDb'],
         },
       ],
     },

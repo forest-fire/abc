@@ -4,7 +4,7 @@ import { IAbcIdsEventPayload, AbcMutationSource, AbcInformationalDbEvent, IAbcMo
  * Informational-only events about changes to either the Firebase or local database's
  * state.
  */
-export interface AbcInformationalEventMap<T> {
+export interface IAbcInformationalEventMap<T> {
   [AbcInformationalDbEvent.localDb_add]: IAbcIdsEventPayload<T, AbcMutationSource.localDb>;
   [AbcInformationalDbEvent.localDb_set]: IAbcIdsEventPayload<T, AbcMutationSource.localDb>;
   [AbcInformationalDbEvent.localDb_update]: IAbcIdsEventPayload<T, AbcMutationSource.localDb>;

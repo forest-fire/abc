@@ -14,130 +14,211 @@ npm install firemodel universal-fire abc --save
 yarn add firemodel universal-fire abc
 ```
 
-## Creating a Store(s)
+
+## Typing the State Tree
+
+Next you'll want to define your state tree's _shape_ via typescript. Imagine you wanted to create an app with the following Firemodel models:
+
+1. `UserProfile` - just one record to represent the logged in user
+2. `Product` - a relevant list of products the user could buy
+3. `Order` - a list of orders which a customer has made or is considering making
+
+In addition, let's assume that:
+
+- you don't like the name `userProfile` (which is the default name ABC would give) so you'd like to have this hang off `profile` instead
+- you also would like to add a `currentOrder` property to the orders part of the state tree to sit next to the list of products
+- finally, lets imagine that you have a registration process in the application which has state associated with it but you don't really want to back it with a database
 
 
-
-## Dispatching
-**ABC** responds to data changes by packaging it up as an "event" and _dispatching_ it. Dispatching is the bridge used to move the change to the state management tool of your choice. In order to add your favorite state management tool you just need to respond to the events provided by ABC and then mutate the state in the way your tool proscribes.
-
-All frameworks require a very simple "plugin" to provide dispatcher functionality which really is no more than a function which conforms to the `AbcDispatchPlugin` type defined below:
-
-```typescript
-export type AbcDispatchPlugin = () => {  
-  dispatcher: AbcDispatchFunction,
-  handlers: AbcHandlerLibrary
-}
-
-export type AbcDispatchFunction = <T>(event: string, payload: T) => Promise<void>
-```
-
-<!-- TODO: bring in type definition for AbcHandlerLibrary, or more likely link out to it -->
-
-### Included Plugins
-
-We include two plugins that are officially maintained and if you've developed one for another framework let us know and we'll link to it. Offical plugins are:
-
-1. [Vuex](https://vuex.vuejs.org/)
-2. [Vegemite](https://github.com/lukeed/vegemite)
-
-> both plugins can be found on Github under the **forest-fire** organization: [vuex plugin](https://github.com/forest-fire/abc-dispatch-vuex), [vegemite plugin](https://github.com/forest-fire/abc-dispatch-vegemite) and should as good instruction for anyone wanting to create their own
-
-## The Store
-
-The "store" is the in-memory data structure that the frontend framework will leverage to *reactively* update pages in the DOM. Structurally they start out as a generic dictionary but then must be _shaped_ into a form that is useful for the application. The specifics of each framework are not important to ABC but there are three broad-based formats that ABC supports:
-
-1. Single Store, Namespaced
-
-    Frameworks such as **Vuex**, assume a single data structure for the store. However, they do provide the concept of a "module" so that different parts of the tree (aka, modules) can be namespaced and avoid
-    any collisions with one another in terms of mutations/reducers/etc.
-
-2. Store per Model
-
-    Frameworks like **Vegemite** can be setup as a single store but are often better structured on a "store per model" basis. This provides the namespace isoloation that modules provide along with other flexibility that can sometimes be important.  
-
-ABC's only requirement about the store is that you 
-<!-- TODO: finish this off -->
-
-## Configuring ABC
-
-Configuration of ABC is done on a model-by-model basis and would look something like this if you were using the Vegemite plugin:
+In this situation your state tree might look like this:
 
 ```ts
-import { Product } from '../models';
-import dispatcher from '@forest-fire/abc-dispatch-vegemite';
+import { AbcModelRecord, AbcModelList } from 'abc';
 
-// basic config
-export const [ getProducts, watchProducts, loadProducts, syncProducts ] 
-  = abc(Product, dispatcher);
-```
-
-There are more advanced configurations which you can try later -- described in [Configuring ABC]() section) -- but at this point you have the ABC functions you'll need to interact with your `Product` model.
-
-## Example: Vegemite
-
-To illustrate we'll use a simple example where we have only one model `Product` and we've decided to use the **Vegemite** state manager in a "one store to model" configuration. 
-
-### Create the `Product` Model
-
-ABC works with [Firemodel](https://firemodel.info) Model's so before doing anything let's define the model so it can be used in all state layers (e.g., Firebase, IndexedDb, and Vegemite):
-
-```typescript
-@model()
-export class Product extends Model {
-  @property name: string;
-  @property price: number;
-  @property description: string;
-  @property category: ICategory;
+export interface IStoreState = {
+  profile: AbcModelRecord<UserProfile>;
+  products: AbcModelList<Product>;
+  orders: AbcModelList<Order> & {
+    currentOrder?: string;
+  };
+  registration: {
+    status: RegistrationStatus
+    email?: string;
+    phone?: string;
+    emailVerified?: string;
+  }
 }
 ```
+> **Note:** you don't need to use the `AbcModelList` and `AbcModelRecord` type helpers but provides a somewhat more expressive/compact type definition. 
 
-> **Note:** this is a very simple model with no relationships, mocks, or other advanced featues. Check the Firemodel docs for more info on this topic: [Modeling in Firemodel](https://firemodel.info/modeling/)
+## Choose a Local State Manager
 
-### Store Setup
-In our example we're using the `isolation` store type which takes just a single model as the basis for it's state management. A few defaults and opinions that are worth mentioning:
+When using ABC, your app will be transparently gathering state from either a local database and/or Firebase and using this data to update a local state management framework like Vuex, Redux, Mobx, Vegemite, etc. To setup your store you must choose which of these frameworks you'd like ABC to work with.
 
-- All models being managed are assumed to be 
+Currently there are two included as plugins which takes all the hard work out of the process: 
 
-This is where 99% of your configuration will go and in this simple example 100%:
+- **Vuex** [ [framework](https://vuex.vuejs.org/), [plugin](https://github.com/forest-fire/abc-plugin-vuex) ]
+- **Vegemite** [ [framework](https://github.com/lukeed/vegemite), [plugin](https://github.com/forest-fire/abc-plugin-vegemite) ]. 
 
-`/src/store.ts`
-```typescript
-import {createStore, moduleDefn} from 'abc';
-import vegemite from '@forest-fire/abc-plugin-vegemite';
+Alternatively, if you want to connect a different manager you can roll your own (see [Creating a Store Plugins](/topics/store) in the _topics_ section).  
+
+Let's assume, for sake of argument, that we've decided on using the Vegemite solution. We must first install these deps:
+
+```sh
+# npm
+npm install --save vegemite @forest-fire/abc-plugin-vegemite
+# yarn
+yarn add vegemite @forest-fire/abc-plugin-vegemite
+```
+
+In the next section we'll see how easy it is to plug this into the store and then address some complications and edge cases.
+
+## Creating the Store
+
+Creating a store is done through use of the `createStore` function which ABC exposes. Let's start with what will turn out to be a somewhat _over-simplified_ example:
+
+### An _Over_-Simplifed Example
+
+```ts{10}
 import { FirestoreClient } from 'universal-fire';
+import vegemite from '@forest-fire/abc-plugin-vegemite';
+import { UserProfile, Product, Order } from '@/models';
 
-interface IProductStore {
-  all: Product[];
-  featured: string[];
-}
+const db = FirestoreClient.create();
 
-const db = await FirestoreClient.connect();
-export const store = createStore(
-  db, vegemite, 'isolated',
-  moduleDefn<IProductStore>(Product, { all: [], featured: [] })
-});
-
-export [
-  getProducts, 
-  watchProducts, 
-  loadProducts, 
-  syncProducts
-] = store.abc(Product);
-
-export const store = vegemite<IEventMap, IProductStore>({
-  all: [],
-  featured: [],
-});
+export const store = createStore<IStoreState>(
+  db, 
+  vegemite, 
+  [ UserProfile, Product, Order ]
+);
 ```
 
+At this stage we have a store but we're not doing it quite right yet. Things we have touched on yet include basic topics such as:
 
+- **Default State:** how is the _default state_ set synchronously at startup/reload/etc?
+- **Custom Mutations:** how do you add our own actions/mutations/reducers/handlers/etc (the ABC ones _have_ been added for us)? What about frameworks like Redux and Vuex which have Actions which sit above mutations?
 
-Imagine when we login the following lifecycle hook is called:
+And more advanced ones like:
 
-```typescript
-async function onLogin() {
-  import { syncProducts, dispatch } from "@/store";
-  syncProducts(where('inStock', true)).then(() => dispatch('products::in-sync')) 
-}
+- **Getters:** what if you wanted to add computed properties like Vuex's getters?
+- **Subscriptions:** what if you want to plugin into the event system and take actions on any events or state changes?
+
+In the next two sections we'll cover all of these topics, starting with the basics.
+
+### Default State and Mutations
+
+#### Default State
+Defining default state is a requirement to ensure that your state management starts out --  *immediately* and *synchronously* -- in an expected and predictable state. Different frameworks have different semantics on how this is achieved but the idea and structure are fairly constrained simply because we're talking about giving values to a data structure that we've already typed. This allows ABC to standardize the configuation approach and pass any variance in API to the plugins to manage for us.
+
+To demonstrate how we'd do this we're going to replace the line highlighted in the prior code example. In that example we made two mistakes:
+
+  1. We stated which Firemodel models we wanted to use but we didn't express explicitly what their default values should be (admittedly Firemodel models have enough super powers that we _might_ have been able to come up with a sensible default for you but state management is important and it's always worth being explicit about it)
+  2. We added _typing_ for the `registration` module but we left out anything concrete about the data to the run-time system. 
+
+Fortunately fixing our mistakes is easy:
+
+```ts
+export const store = createStore<IStoreState>(
+  db, 
+  vegemite, 
+  (model, module) => [ 
+    model(UserProfile, {}, { singular: true, moduleName: 'profile' }), 
+    model(Product, { all: [] }), 
+    model(Order,  { all: [], currentOrder: undefined })
+    module('registration', { status: 'unregistered' })
+  ]
+);
 ```
+
+What we can see from this example is that the third parameter to `createStore` is a *function* which provides us two functions to help us configure each of our state modules. If the state module is being backed by Firemodel then use the `model()` function, if not then use `module()`. These two functions have very similar signatures and the second parameter allows us to state what the default state should be.
+
+You may have noticed that for `UserProfile` we used a third parameter. This is an _options hash_ which has several ABC options that you'll also see but also a plugin can add in additional configuration elements. In the next section you'll see why that's important.
+
+#### Custom Mutations
+
+The first problem with effecting change on a state-management framework is the inconsistency in nominclature. Here a sketch of how three frameworks *talk* about changing state:
+
+``` mermaid
+graph TB
+    subgraph Redux
+    r1[Action]-->r2[Reducer]-->r3(State)
+    end
+    subgraph Vuex
+    v1[Action]-->v2[Mutation]-->v3(State)
+    end
+    subgraph Vegemite
+    vv1[Handler]-->vv2(State)
+    end
+```
+
+In the case of Vuex and Redux the Actions are asynchronous and can't mutate state directly but instead must interact with a synchronous function (or set of functions) to do the mutation on behalf of the Action. In Vegemite the utility of Actions and reducer/mutations are rolled together as an asynchronous function. To say what is better would be sacrosanct ... it's all opinion topped up with emotion.
+
+First off, let's get some good news into the picture ... all requirements related to mutating the state of ABC backed models is done for you. Your job is to use the time you _didn't_ have spend writing this code on something to improve the planet (or just to get up and take a break from work). This section's focus is about how you add your own _custom handlers_ to change state.
+
+We have delved into the background in part because we wanted to highlight that this is an area of  differences but because the third parameter of `createStore()` has been setup as a function that allows us to provide a typed solution that reacts to to the state-management framework you've chosen. This means that if you chose **Vuex** you can set *actions* and *mutations* but not *handlers*. If you choose **Vegemite** the opposite is true.
+
+```ts {8,18}
+// Vuex example
+import { actions, mutations } from '@/my-vuex'
+export const store = createStore<IStoreState>(
+  db, 
+  vuex, 
+  (model, module) => [ 
+    // ...
+    module('registration', { status: 'unregistered' }, { actions, mutations })
+  ]
+);
+// Vegemite example
+import { handlers } from '@/my-vegemite'
+export const store = createStore<IStoreState>(
+  db, 
+  vuex, 
+  (model, module) => [ 
+    // ...
+    module('registration', { status: 'unregistered' }, { handlers })
+  ]
+);
+```
+
+#### Triggering Mutations
+
+Triggering the ABC events is handled by ABC but for your custom functions you'll want to trigger these actions/mutations/handlers yourself. This is again done using the semantics that the state management framework you've chosen. In Vegemite, you would call `dispatch` to trigger a _handler_. In Vuex, you get a `dispatch` function for calling Actions but in our example the better parallel is to use `commit` to call a mutation on Vuex.
+
+```ts
+// Vegemite
+const store = createStore(db, vegemite, ...);
+store.dispatch('registration::email', 'someone@company.com');
+// Vuex
+const store = createStore(db, vegemite, ...);
+store.commit('registration::email', 'someone@company.com');
+```
+
+### Getters / Computed Props
+
+The concept of including something like Vuex's `getters` is not consistent across state management frameworks and in general we don't really recommend it but everyone has their vices. If you're using the Vuex plugin you will see that `getters` is an available options in the `model()`'s options hash. If you're using a state management framework like Vegemite, this will not be an option that is presented.
+
+### Subscriptions
+
+Subscriptions allow you to plug into the event system of the state management framework. The act of subscribing (and unsubscribing) is consistent across frameworks but the nominclature and specific API vary. Whatever the _verb_ that the framework provides will be exposed on the Store's API and provide you direct access to that framework's API:
+
+```ts
+// Vegemite
+const unlisten = store.listen(evt, (state, prevState) => { ... });
+// Vuex
+store.subscribe(() => (mutation, state) => { ... })
+```
+
+## Deploying ABC
+
+Setting up and configuring the Store has also configured the ABC API but one step is left and that is to export the action verbs that you find appropriate for each model. Every model which you have added to your store can export any of the action verbs [ `get`, `load`, `sync`, `add`, `update`, `remove`, etc.]. In our running example, for instance, it might never make sense for our app to _write_ to the `Product` model but it does for the others. This deployment of ABC symbols -- typically found in the same file as the store configuration would look something like:
+
+```ts
+const store = createStore(...);
+export { getProfile, updateProfile } = store.abc(UserProfile)
+export { getProducts, loadProducts, syncProducts } = store.abc(Product)
+export { getOrders, syncOrders, updateOrder } = store.abc(Order)
+```
+
+## Usage
+
+You are now ready to use ABC. The next section will go into details about each of the various commands available in the core ABC API. 

@@ -14,7 +14,7 @@ import {
  * Provides a _typing_ lookup service for incoming `AbcLocalEvent` events,
  * indicating what type the payload of the event will be.
  */
-export interface AbcLocalEventMap<T extends Model = Model, TSecondary extends Model = Model> {
+export interface IAbcLocalEventMap<T extends Model = Model, TSecondary extends Model = Model> {
   [AbcLocalEvent.add]: IAbcRecordEventPayload<T, AbcMutationSource.local>;
   [AbcLocalEvent.merge]: IAbcListEventPayload<T, AbcMutationSource>;
   [AbcLocalEvent.mergeRemoval]: IAbcListEventPayload<T, AbcMutationSource>;

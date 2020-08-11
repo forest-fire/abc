@@ -66,4 +66,9 @@ export const enum AbcLocalEvent {
    * Disassociates two records
    */
   disassociate = 'disassociate',
+
+  recordConfirm = 'recordConfirm',
+  recordRollback = 'recordRollback',
+  relationshipConfirm = 'relationshipConfirm',
+  relationshipRollback = 'relationshipRollback',
 }

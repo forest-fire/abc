@@ -1,4 +1,4 @@
 # Sync
 
-The `sync` operation is used to Synchronizes data between a local database (IndexedDB) and Firebase (Firestore/RealTime DB)
+The `sync` operation is used to Synchronizes data between a local database (typically meaning IndexedDB) and Firebase (Firestore/RealTime DB).
 
