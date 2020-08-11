@@ -1,5 +1,5 @@
 {
-  "name": "abc",
+  "name": "abc-js",
   "version": "0.1.0",
   "description": "A cache forward API which brings together local state management, IndexedDB, and Firebase",
   "main": "dist/cjs/index.js",
