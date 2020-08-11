@@ -5,13 +5,13 @@ sidebar: auto
 
 ## Install Deps
 
-In order to use the ABC API you must have [**Firemodel**](https://firemodel.info) and [**universal-fire**](https://universal-fire.net) installed:
+In order to use the ABC API you must have [**Firemodel**](https://firemodel.info), [**universal-fire**](https://universal-fire.net), and [**abc**] installed:
 
 ```sh
 # npm
-npm install firemodel universal-fire abc --save
+npm install firemodel universal-fire abc-js --save
 # yarn
-yarn add firemodel universal-fire abc
+yarn add firemodel universal-fire abc-js
 ```
 
 
@@ -153,18 +153,17 @@ graph TB
 
 In the case of Vuex and Redux the Actions are asynchronous and can't mutate state directly but instead must interact with a synchronous function (or set of functions) to do the mutation on behalf of the Action. In Vegemite the utility of Actions and reducer/mutations are rolled together as an asynchronous function. To say what is better would be sacrosanct ... it's all opinion topped up with emotion.
 
-First off, let's get some good news into the picture ... all requirements related to mutating the state of ABC backed models is done for you. Your job is to use the time you _didn't_ have spend writing this code on something to improve the planet (or just to get up and take a break from work). This section's focus is about how you add your own _custom handlers_ to change state.
+First off, let's get some good news into the picture ... all requirements related to mutating the state of ABC backed models is done for you. With that out of the way, you only need focus on _custom handlers_ to effect change on non Firebase backed properties.
 
 We have delved into the background in part because we wanted to highlight that this is an area of  differences but because the third parameter of `createStore()` has been setup as a function that allows us to provide a typed solution that reacts to to the state-management framework you've chosen. This means that if you chose **Vuex** you can set *actions* and *mutations* but not *handlers*. If you choose **Vegemite** the opposite is true.
 
-```ts {8,18}
+```ts {7,16}
 // Vuex example
 import { actions, mutations } from '@/my-vuex'
 export const store = createStore<IStoreState>(
   db, 
   vuex, 
   (model, module) => [ 
-    // ...
     module('registration', { status: 'unregistered' }, { actions, mutations })
   ]
 );
@@ -174,7 +173,6 @@ export const store = createStore<IStoreState>(
   db, 
   vuex, 
   (model, module) => [ 
-    // ...
     module('registration', { status: 'unregistered' }, { handlers })
   ]
 );
@@ -182,7 +180,7 @@ export const store = createStore<IStoreState>(
 
 #### Triggering Mutations
 
-Triggering the ABC events is handled by ABC but for your custom functions you'll want to trigger these actions/mutations/handlers yourself. This is again done using the semantics that the state management framework you've chosen. In Vegemite, you would call `dispatch` to trigger a _handler_. In Vuex, you get a `dispatch` function for calling Actions but in our example the better parallel is to use `commit` to call a mutation on Vuex.
+Triggering your custom events is handled by using the API hanging off off of the store and the _verbs_ you'll use will be based on the underlying store management framework. In Vegemite, you would call `dispatch` to trigger a _handler_. In Vuex, you get a `dispatch` function for calling Actions but in our example the better parallel is to use `commit` to call a mutation on Vuex.
 
 ```ts
 // Vegemite
@@ -199,7 +197,7 @@ The concept of including something like Vuex's `getters` is not consistent acros
 
 ### Subscriptions
 
-Subscriptions allow you to plug into the event system of the state management framework. The act of subscribing (and unsubscribing) is consistent across frameworks but the nominclature and specific API vary. Whatever the _verb_ that the framework provides will be exposed on the Store's API and provide you direct access to that framework's API:
+Subscriptions allow you to plug into the event system of the state management framework. The act of subscribing (and unsubscribing) is a consistently offered feature across frameworks but the nominclature and specific API vary. Whatever the _verb_ that the framework provides will be exposed on the Store's API and provide you direct access to that framework's API:
 
 ```ts
 // Vegemite
@@ -210,7 +208,7 @@ store.subscribe(() => (mutation, state) => { ... })
 
 ## Deploying ABC
 
-Setting up and configuring the Store has also configured the ABC API but one step is left and that is to export the action verbs that you find appropriate for each model. Every model which you have added to your store can export any of the action verbs [ `get`, `load`, `sync`, `add`, `update`, `remove`, etc.]. In our running example, for instance, it might never make sense for our app to _write_ to the `Product` model but it does for the others. This deployment of ABC symbols -- typically found in the same file as the store configuration would look something like:
+Configuring the Store also configures ABC but one step is left and that is to export the action verbs that you find appropriate for each model. Every model which you have added to your store can export any of the action verbs [ `get`, `load`, `sync`, `add`, `update`, `remove`, etc.]. In our running example, for instance, it might never make sense for our app to _write_ to the `Product` model but it does for the others. This deployment of ABC symbols -- typically found in the same file as the store configuration would look something like:
 
 ```ts
 const store = createStore(...);

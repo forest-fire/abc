@@ -211,7 +211,7 @@ module.exports = {
         {
           title: 'Topics',
           collapsable: false,
-          children: ['app-returns-versus-state', 'state-mgmt-conventions', 'store', 'localDb'],
+          children: ['app-returns-versus-state', 'store', 'localDb'],
         },
       ],
     },
