@@ -9,9 +9,9 @@ In order to use the ABC API you must have [**Firemodel**](https://firemodel.info
 
 ```sh
 # npm
-npm install firemodel universal-fire abc-js --save
+npm install firemodel universal-fire abc --save
 # yarn
-yarn add firemodel universal-fire abc-js
+yarn add firemodel universal-fire abc
 ```
 
 
@@ -123,7 +123,7 @@ export const store = createStore<IStoreState>(
   vegemite, 
   (model, module) => [ 
     model(UserProfile, {}, { singular: true, moduleName: 'profile' }), 
-    model(Product, { all: [] }), 
+    model(Product, () => { all: [] }), 
     model(Order,  { all: [], currentOrder: undefined })
     module('registration', { status: 'unregistered' })
   ]

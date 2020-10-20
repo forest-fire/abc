@@ -19,5 +19,5 @@ graph LR
 
 ## Situational Awareness
 
-If your application wants to indicate that a record has been _added_ but this is not yet confirmed by Firebase, this is made possible by the built-in typing that an ABC backed state module is provided:
+If your application wants to indicate that a record has been _added but is not yet confirmed by Firebase_, this is made possible by the built-in typing that an ABC backed state module is provided. To understand how you can get this information read the topic [Beyond the Record](/topics/beyond-the-record).
 

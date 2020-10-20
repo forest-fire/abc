@@ -1,16 +1,18 @@
-//#autoindex, exclude: store,subscribers
+//#autoindex, exclude: abc
 
 export { createStore } from './store';
 
 //#region autoindexed files
 
-// index last changed at: 8th Aug, 2020, 03:04 PM ( GMT-7 )
-// export: named; exclusions: store, subscribers, index, private.
-// directories: abc, errors, types.
+// index last changed at: 8th Aug, 2020, 11:15 AM ( GMT-7 )
+// export: named; exclusions: abc, index, private.
+// directories: api, errors, plugins, store, types.
 
 // directory exports
-export * from './abc/index';
-export * from './errors/index';
-export * from './types/index';
+export * from "./api/index";
+export * from "./errors/index";
+export * from "./plugins/index";
+export * from "./store/index";
+export * from "./types/index";
 
 //#endregion

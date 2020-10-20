@@ -19,7 +19,7 @@ const results = await getProducts(where('inStock', true))
 
 And this would execute along the following path:
 
-``` mermaid
+<mermaid>
 sequenceDiagram
 participant App
 participant StateMgmt
@@ -32,7 +32,7 @@ IndexedDb->>IndexedDb: gets products from IDB
 IndexedDb->>StateMgmt: updates state
 IndexedDb->>App: Promise < Product[] >
 deactivate IndexedDb
-```
+</mermaid>
 
 > For more info on how to ensure you have a fresh cache, read the [**load**](./load.md) and [**sync**](./sync.md) sections
 

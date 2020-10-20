@@ -1,5 +1,5 @@
 {
-  "name": "abc-js",
+  "name": "abc",
   "version": "0.1.0",
   "description": "A cache forward API which brings together local state management, IndexedDB, and Firebase",
   "main": "dist/cjs/index.js",
@@ -62,7 +62,7 @@
     "typescript": "^3.9.7",
     "typescript-transform-paths": "^2.0.0",
     "universal-fire": "^0.55.13",
-    "uvu": "^0.3.2",
+    "uvu": "^0.3.3",
     "vegemite": "^1.0.0",
     "vuepress": "^1.5.3",
     "vuepress-plugin-mermaidjs": "^1.6.0"
